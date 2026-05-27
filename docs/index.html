@@ -147,101 +147,42 @@
     </header>
 
     <section class="writeup-section">
-      <h2>Motivation</h2>
+      <h2>What have you done so far?</h2>
       <p>
-        While most Americans think of lightning as the leading cause of wildfires,
-        NOAA and the U.S. Forest Service have reported that up to 85% of them are
-        caused by humans. This experiment explores that question by analyzing
-        satellite data from GOES-16 and presents its findings in a way that reveals
-        results that most Americans may find shocking. The proposition that we are
-        exploring is that lightning causes most wildfires in the United States.
-        Based on what we've found, it turns out the answer is no. Throughout the
-        2024 fire season, approximately <strong>79% of U.S. wildfires had no
-        lightning strikes in the 24 hours leading up to them</strong>, almost
-        perfectly matching the federal reports.
+        This project builds directly on the wildfire work from our Project 3, which
+        we have extended into a complete scrollytelling data story that investigates
+        whether lightning causes most wildfires in the United States, using GOES-16
+        satellite data from the 2024 fire season. Starting from the Project 3 data
+        pipeline, we expanded it to pull fire detections from the GOES-16 ABI-L2-FDCC
+        product and lightning flashes from the GOES-16 GLM-L2-LCFA product, binning
+        both into 0.5 degree cells and weekly windows so the two phenomena can be
+        compared in the same place at the same time. On the front end we implemented six narrative stages
+        in D3 that move from a week-by-week animated fire map, to a cumulative season
+        map, to a state-level choropleth, to a bivariate fire-versus-lightning map, to
+        a scatterplot that tests whether lightning preceded each fire, and finally to
+        a bivariate fire-versus-VPD map. We replaced our early mocked lightning
+        estimates with a real sampled GLM pull, which moved our headline statistic to
+        roughly 88 percent of fire cells having no lightning in the 24 hours before
+        detection, and we added interactions including a time slider, per-state detail
+        panels, and scatter brushing that recomputes the headline statistic live.
       </p>
     </section>
 
     <section class="writeup-section">
-      <h2>Design Rationale</h2>
+      <h2>What will be the most challenging part of your project to design, and why?</h2>
       <p>
-        We initially broke down the visualization into a three-stage scrollytelling
-        structure and ended up revising it to fit five stages. The five stages span
-        from weekly fires, over aggregated seasons, to statewide analysis, a
-        bivariate lightning overlay, and finally, a scatterplot-based conclusion.
-        This structure allows viewers to build up a deeper understanding of the
-        argument incrementally instead of being handed a conclusion with
-        overwhelming data.
-      </p>
-      <p>
-        Most importantly, the fourth stage became necessary after a failed attempt
-        to use a side-by-side map of both phenomena. Aligning two different color
-        scales became too demanding, and there was no clear message to be gained
-        from the visuals. We also chose to use a bivariate choropleth in a 3×3
-        palette in which red represents high fires and low lightning, and blue
-        represents the opposite. This made the key insight immediately visible
-        through color alone instead of requiring readers to interpret it themselves.
-        We also considered a diverging map of fire divided by lightning, but
-        combining two variables into a single ratio would likely suppress key
-        information. The bivariate approach keeps both dimensions visible.
-      </p>
-      <p>
-        For color, fire uses an orange-red gradient that is physically intuitive,
-        lightning uses yellow which matches how it appears in satellite imagery,
-        and a cyan accent marks all interactive elements so they appear as a
-        separate layer from the data rather than part of it. Deep purple is at
-        the high right corner of the palette, and the lack of purple across the
-        fire-heavy Western states also visually supports our overall conclusion.
-      </p>
-      <p>
-        All interactions were designed to stay consistent throughout. The slider
-        reveals the wave of wildfire frequency across the continental U.S. over
-        time, the state click-through provides additional checks for each state,
-        and scatter brushing allows viewers to filter by lightning rate and watch
-        the headline statistic update in real time.
-      </p>
-    </section>
-
-    <section class="writeup-section">
-      <h2>Development Process</h2>
-      <p>
-        Our fire data was pulled from the GOES-16 ABI-L2-FDCC, binned by both
-        date window and geographic cell size of 0.5 degrees, and filtered to
-        include only detections marked as real fires based on the quality flag
-        code. For lightning data, we sampled two files per hour from the GOES-16
-        GLM-L2-LCFA dataset and scaled the counts by 90× to estimate the full
-        dataset. These values were only used for statewide aggregate analysis,
-        where sampling noise becomes less significant. A fire cell was considered
-        to have prior lightning activity if five or more lightning strikes were
-        observed in the same cell within the preceding 24 hours. Single isolated
-        strikes were excluded to reduce the impact of possible sensor artifacts.
-      </p>
-      <p>
-        We brainstormed roughly five other propositions before settling on this
-        one because it was simple, fully supported by GOES data, and capable of
-        being tested directly against the evidence. The hardest engineering
-        challenge involved pulling the GLM data. The NOAA S3 bucket was heavily
-        throttled at anonymous endpoints, and multiple sandboxed environments
-        blocked outbound access entirely. We ultimately had to move the data
-        pull into an unrestricted environment before replacing our mocked
-        estimates with real lightning data. Once that happened, the headline
-        statistic shifted to a more accurate 79%. Development took around 20 to
-        24 total people-hours (3 people × 8 hours).
-      </p>
-      <p>
-        All team members supported the development process consistently, with
-        each team member playing key roles. <strong>Dylan</strong> primarily
-        built the data pipeline, including the FDCC pull, GLM extraction and
-        scaling, and the cross-referencing logic between fire cells and lightning
-        activity. <strong>Vipra</strong> led most of the D3 visualization work,
-        including the scrollytelling interaction, transitions, IntersectionObserver
-        triggers, and the bivariate choropleth map. <strong>Anwesha</strong> led
-        the narrative and visual design process, including proposition
-        development, color palette selection, the per-state detail panel, and
-        the final scatterplot visualization. The work was collaborative across
-        all areas. All three team members contributed to debugging the GLM data
-        issues and restructuring the project from a three-stage into a five-stage
-        experience.
+        The most challenging part going forward will be designing the final Vapor
+        Pressure Deficit (VPD) stage so that it reads as a credible alternative
+        explanation rather than a second inconclusive overlay. Because we are
+        introducing a third variable late in the story, we have to teach viewers what
+        VPD measures and why a correlation of r equals 0.43 is meaningful, all without
+        overwhelming them or implying a causal claim that the data cannot support.
+        Visually, balancing two bivariate maps in sequence, fire versus lightning and
+        then fire versus VPD, is difficult because the two need to feel parallel so the
+        contrast lands, yet distinct enough that readers do not confuse the two stories.
+        We also expect the per-state detail panel and the live-updating scatter brushing
+        to be the most demanding interactions to keep both fast and intuitive, since each
+        one has to recompute and redraw cleanly while staying readable on smaller screens.
       </p>
     </section>
   </article>
