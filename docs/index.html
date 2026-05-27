@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Lightning Doesn't Light Most U.S. Wildfires</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="tab-nav">
+    <div class="tab-nav-inner">
+      <button class="tab-btn active" data-tab="story">The Story</button>
+      <button class="tab-btn" data-tab="writeup">Writeup</button>
+    </div>
+  </nav>
+
+  <div id="story" class="tab-content active">
+
+  <header>
+    <div class="kicker">A Visual Investigation</div>
+    <h1>Lightning Doesn't Light Most U.S. Wildfires</h1>
+    <p class="lede">
+      Folk belief blames lightning for wildfires. NOAA and the USDA say roughly
+      <strong>85 percent</strong> are human-caused. Here is what GOES-16 satellite data
+      from the 2024 fire season shows about where lightning struck and where the country burned.
+    </p>
+    <p class="byline">By Vipra Bindal &nbsp;·&nbsp; DSC 106 Project 3</p>
+    <p class="note">
+      <strong>One quick definition.</strong> Throughout this story, a <em>"fire cell"</em>
+      is a piece of land roughly 50 km on a side (about the size of a U.S. county). We mark
+      a cell as <em>on fire that week</em> if the GOES-16 satellite spotted active fire anywhere
+      inside it during the week. Lightning strikes are counted inside the same cells. Source:
+      NOAA GOES-16 ABI-L2-FDCC (fires) and GLM-L2-LCFA (lightning), 2024 fire season, public on AWS Open Data.
+    </p>
+    <p class="scroll-hint">↓ Scroll to follow the story</p>
+  </header>
+
+  <section class="scrolly">
+    <div class="scrolly-graphic">
+      <div class="graphic-inner">
+        <div class="stage-progress-bar">
+          <div class="stage-dots" id="stage-dots"></div>
+        </div>
+        <div class="viz-area">
+          <div id="main-viz" class="map"></div>
+          <aside id="state-panel" class="state-panel hidden">
+            <div class="state-panel-placeholder">
+              Click any state on the map to see its fire and lightning timeline.
+            </div>
+          </aside>
+        </div>
+        <div id="stage-controls" class="stage-controls"></div>
+      </div>
+    </div>
+
+    <div class="scrolly-text">
+      <div class="step" data-stage="1">
+        <div class="step-label">1 / Week by week</div>
+        <h2>Watch a fire season unfold</h2>
+        <p>
+          Each circle is a <strong>fire cell</strong>: a county-sized patch of land (about
+          50 km on a side) where the GOES-16 satellite spotted active fire that week. Bigger
+          circles mean more fire energy, measured in <strong>megawatts (MW)</strong>: the
+          same unit used to rate power plants. A backyard bonfire is fractions of a megawatt;
+          a major wildfire can put out several thousand. Darker circles mean a hotter peak
+          intensity. Drag the slider to walk from June through October.
+        </p>
+      </div>
+      <div class="step" data-stage="2">
+        <div class="step-label">2 / Stack the weeks</div>
+        <h2>Now stack every week into one map</h2>
+        <p>
+          Every week of detection layered onto the same map. By the end of October, three burn
+          bands have emerged: the Western mountains, the southern Plains corridor through Texas,
+          and the long Mississippi Valley. The Northeast and Upper Midwest sit out the season
+          almost entirely.
+        </p>
+      </div>
+      <div class="step" data-stage="3">
+        <div class="step-label">3 / Zoom out</div>
+        <h2>Step back. Aggregate to states</h2>
+        <p>
+          The dots dissolve. Each state lights up by its total fire radiative power for the
+          season. The geography is impossible to miss: a Western band of intense red, a
+          Texas-to-Florida corridor of moderate orange, and the rest of the country quiet.
+        </p>
+      </div>
+      <div class="step" data-stage="4">
+        <div class="step-label">4 / Add the lightning</div>
+        <h2>Now bring in the lightning</h2>
+        <p>
+          The map is recolored on two axes: fire vertically, lightning horizontally. Some
+          states do appear dark in both directions. Texas, Louisiana, and the Mississippi
+          Valley get agricultural burning <em>and</em> frequent Gulf thunderstorms, so they
+          end up in the high-fire / high-lightning corner. But sharing a state isn't the same
+          as one causing the other. Look at the loudest corners instead: <strong>Florida</strong>
+          flashes the most lightning of any state and barely burns, while
+          <strong>California</strong> burns hottest with little lightning to blame. The
+          relationship is regional, not national. Click any state for the weekly breakdown.
+        </p>
+      </div>
+      <div class="step" data-stage="5">
+        <div class="step-label">5 / The verdict</div>
+        <h2>Did the lightning actually come first?</h2>
+        <p>
+          One dot per fire cell, per week it burned. The X-axis is the number of lightning
+          flashes in that same cell within the 24 hours <em>before</em> the fire was detected.
+          If lightning caused fires, the dots would climb a diagonal. They don't. Drag any
+          rectangle to focus a subset. The headline tells you how many had no preceding
+          lightning. Whatever slice you take, the majority did.
+        </p>
+      </div>
+      <div class="step" data-stage="6">
+        <div class="step-label">6 / A new factor</div>
+        <h2>Does atmospheric dryness explain what lightning doesn't?</h2>
+        <p>
+          Each state is now colored on two axes: fire intensity vertically,
+          <strong>Vapor Pressure Deficit (VPD)</strong> horizontally. VPD measures how
+          aggressively the atmosphere pulls moisture out of vegetation — the higher it is,
+          the drier and more combustible the fuel becomes. Unlike lightning, which showed
+          almost no correlation with fire intensity at the national level, <strong>VPD
+          correlates with fire radiative power at r&nbsp;=&nbsp;0.43</strong>. The Western
+          states that burned the hardest sit squarely in the high-VPD column. Drag the
+          slider to watch fire cells pulse through the season as atmospheric dryness rises
+          and falls. Click any state for its weekly fire and VPD timeline.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <footer>
+    <p>
+      Data: GOES-16 ABI-L2-FDCC (fires) and GOES-16 GLM-L2-LCFA (lightning), aggregated to 0.5° cells and weekly bins.
+      VPD data: NOAA GOES / GRIDMET daily vapor pressure deficit, 2024 fire season.
+      U.S. state outlines from <code>us-atlas</code>.
+    </p>
+  </footer>
+  </div><!-- /#story -->
+
+  <article id="writeup" class="tab-content writeup-article">
+    <header class="writeup-header">
+      <div class="kicker">Project Notes</div>
+      <h1>Writeup</h1>
+      <p class="byline">By Vipra Bindal &nbsp;·&nbsp; DSC 106 Project 3</p>
+    </header>
+
+    <section class="writeup-section">
+      <h2>Motivation</h2>
+      <p>
+        While most Americans think of lightning as the leading cause of wildfires,
+        NOAA and the U.S. Forest Service have reported that up to 85% of them are
+        caused by humans. This experiment explores that question by analyzing
+        satellite data from GOES-16 and presents its findings in a way that reveals
+        results that most Americans may find shocking. The proposition that we are
+        exploring is that lightning causes most wildfires in the United States.
+        Based on what we've found, it turns out the answer is no. Throughout the
+        2024 fire season, approximately <strong>79% of U.S. wildfires had no
+        lightning strikes in the 24 hours leading up to them</strong>, almost
+        perfectly matching the federal reports.
+      </p>
+    </section>
+
+    <section class="writeup-section">
+      <h2>Design Rationale</h2>
+      <p>
+        We initially broke down the visualization into a three-stage scrollytelling
+        structure and ended up revising it to fit five stages. The five stages span
+        from weekly fires, over aggregated seasons, to statewide analysis, a
+        bivariate lightning overlay, and finally, a scatterplot-based conclusion.
+        This structure allows viewers to build up a deeper understanding of the
+        argument incrementally instead of being handed a conclusion with
+        overwhelming data.
+      </p>
+      <p>
+        Most importantly, the fourth stage became necessary after a failed attempt
+        to use a side-by-side map of both phenomena. Aligning two different color
+        scales became too demanding, and there was no clear message to be gained
+        from the visuals. We also chose to use a bivariate choropleth in a 3×3
+        palette in which red represents high fires and low lightning, and blue
+        represents the opposite. This made the key insight immediately visible
+        through color alone instead of requiring readers to interpret it themselves.
+        We also considered a diverging map of fire divided by lightning, but
+        combining two variables into a single ratio would likely suppress key
+        information. The bivariate approach keeps both dimensions visible.
+      </p>
+      <p>
+        For color, fire uses an orange-red gradient that is physically intuitive,
+        lightning uses yellow which matches how it appears in satellite imagery,
+        and a cyan accent marks all interactive elements so they appear as a
+        separate layer from the data rather than part of it. Deep purple is at
+        the high right corner of the palette, and the lack of purple across the
+        fire-heavy Western states also visually supports our overall conclusion.
+      </p>
+      <p>
+        All interactions were designed to stay consistent throughout. The slider
+        reveals the wave of wildfire frequency across the continental U.S. over
+        time, the state click-through provides additional checks for each state,
+        and scatter brushing allows viewers to filter by lightning rate and watch
+        the headline statistic update in real time.
+      </p>
+    </section>
+
+    <section class="writeup-section">
+      <h2>Development Process</h2>
+      <p>
+        Our fire data was pulled from the GOES-16 ABI-L2-FDCC, binned by both
+        date window and geographic cell size of 0.5 degrees, and filtered to
+        include only detections marked as real fires based on the quality flag
+        code. For lightning data, we sampled two files per hour from the GOES-16
+        GLM-L2-LCFA dataset and scaled the counts by 90× to estimate the full
+        dataset. These values were only used for statewide aggregate analysis,
+        where sampling noise becomes less significant. A fire cell was considered
+        to have prior lightning activity if five or more lightning strikes were
+        observed in the same cell within the preceding 24 hours. Single isolated
+        strikes were excluded to reduce the impact of possible sensor artifacts.
+      </p>
+      <p>
+        We brainstormed roughly five other propositions before settling on this
+        one because it was simple, fully supported by GOES data, and capable of
+        being tested directly against the evidence. The hardest engineering
+        challenge involved pulling the GLM data. The NOAA S3 bucket was heavily
+        throttled at anonymous endpoints, and multiple sandboxed environments
+        blocked outbound access entirely. We ultimately had to move the data
+        pull into an unrestricted environment before replacing our mocked
+        estimates with real lightning data. Once that happened, the headline
+        statistic shifted to a more accurate 79%. Development took around 20 to
+        24 total people-hours (3 people × 8 hours).
+      </p>
+      <p>
+        All team members supported the development process consistently, with
+        each team member playing key roles. <strong>Dylan</strong> primarily
+        built the data pipeline, including the FDCC pull, GLM extraction and
+        scaling, and the cross-referencing logic between fire cells and lightning
+        activity. <strong>Vipra</strong> led most of the D3 visualization work,
+        including the scrollytelling interaction, transitions, IntersectionObserver
+        triggers, and the bivariate choropleth map. <strong>Anwesha</strong> led
+        the narrative and visual design process, including proposition
+        development, color palette selection, the per-state detail panel, and
+        the final scatterplot visualization. The work was collaborative across
+        all areas. All three team members contributed to debugging the GLM data
+        issues and restructuring the project from a three-stage into a five-stage
+        experience.
+      </p>
+    </section>
+  </article>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+  <script src="script.js"></script>
+  <script>
+    // Tab switching — supports #writeup deep-link
+    function showTab(tab) {
+      document.querySelectorAll(".tab-btn").forEach(b =>
+        b.classList.toggle("active", b.dataset.tab === tab));
+      document.querySelectorAll(".tab-content").forEach(c =>
+        c.classList.toggle("active", c.id === tab));
+    }
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        showTab(btn.dataset.tab);
+        history.replaceState(null, "", "#" + btn.dataset.tab);
+        window.scrollTo({ top: 0 });
+      });
+    });
+    if (location.hash === "#writeup") showTab("writeup");
+  </script>
+</body>
+</html>
