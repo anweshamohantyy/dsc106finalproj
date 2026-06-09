@@ -7,15 +7,6 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <nav class="tab-nav">
-    <div class="tab-nav-inner">
-      <button class="tab-btn active" data-tab="story">The Story</button>
-      <button class="tab-btn" data-tab="writeup">Writeup</button>
-    </div>
-  </nav>
-
-  <div id="story" class="tab-content active">
-
   <header>
     <div class="kicker">A Visual Investigation</div>
     <h1>Lightning Doesn't Light Most U.S. Wildfires</h1>
@@ -130,6 +121,18 @@
 
   <div class="tooltip" id="tooltip"></div>
 
+  <section class="summary">
+    <div class="kicker">In Summary</div>
+    <h2>What the data shows</h2>
+    <p class="lede">
+      <strong>88 percent</strong> of fire cells had zero preceding lightning — no matter
+      what subset of the data you select. Vapor Pressure Deficit correlates with fire
+      intensity at <strong>r&nbsp;=&nbsp;0.43</strong>, a far stronger signal. Our
+      visualization lets you verify this yourself rather than simply asserting it — proving
+      that lightning doesn't drive most U.S. wildfires. Atmospheric dryness does.
+    </p>
+  </section>
+
   <footer>
     <p>
       Data: GOES-16 ABI-L2-FDCC (fires) and GOES-16 GLM-L2-LCFA (lightning), aggregated to 0.5° cells and weekly bins.
@@ -137,75 +140,9 @@
       U.S. state outlines from <code>us-atlas</code>.
     </p>
   </footer>
-  </div><!-- /#story -->
-
-  <article id="writeup" class="tab-content writeup-article">
-    <header class="writeup-header">
-      <div class="kicker">Project Notes</div>
-      <h1>Writeup</h1>
-      <p class="byline">By: Anwesha Mohanty, Vipra Bindal, Dylan Cheng &nbsp;·&nbsp; DSC 106 Final Project</p>
-    </header>
-
-    <section class="writeup-section">
-      <h2>What have you done so far?</h2>
-      <p>
-        This project builds directly on the wildfire work from our Project 3, which
-        we have extended into a complete scrollytelling data story that investigates
-        whether lightning causes most wildfires in the United States, using GOES-16
-        satellite data from the 2024 fire season. Starting from the Project 3 data
-        pipeline, we expanded it to pull fire detections from the GOES-16 ABI-L2-FDCC
-        product and lightning flashes from the GOES-16 GLM-L2-LCFA product, binning
-        both into 0.5 degree cells and weekly windows so the two phenomena can be
-        compared in the same place at the same time. On the front end we implemented six narrative stages
-        in D3 that move from a week-by-week animated fire map, to a cumulative season
-        map, to a state-level choropleth, to a bivariate fire-versus-lightning map, to
-        a scatterplot that tests whether lightning preceded each fire, and finally to
-        a bivariate fire-versus-VPD map. We replaced our early mocked lightning
-        estimates with a real sampled GLM pull, which moved our headline statistic to
-        roughly 88 percent of fire cells having no lightning in the 24 hours before
-        detection, and we added interactions including a time slider, per-state detail
-        panels, and scatter brushing that recomputes the headline statistic live.
-      </p>
-    </section>
-
-    <section class="writeup-section">
-      <h2>What will be the most challenging part of your project to design, and why?</h2>
-      <p>
-        The most challenging part going forward will be designing the final Vapor
-        Pressure Deficit (VPD) stage so that it reads as a credible alternative
-        explanation rather than a second inconclusive overlay. Because we are
-        introducing a third variable late in the story, we have to teach viewers what
-        VPD measures and why a correlation of r equals 0.43 is meaningful, all without
-        overwhelming them or implying a causal claim that the data cannot support.
-        Visually, balancing two bivariate maps in sequence, fire versus lightning and
-        then fire versus VPD, is difficult because the two need to feel parallel so the
-        contrast lands, yet distinct enough that readers do not confuse the two stories.
-        We also expect the per-state detail panel and the live-updating scatter brushing
-        to be the most demanding interactions to keep both fast and intuitive, since each
-        one has to recompute and redraw cleanly while staying readable on smaller screens.
-      </p>
-    </section>
-  </article>
 
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
   <script src="script.js"></script>
-  <script>
-    // Tab switching — supports #writeup deep-link
-    function showTab(tab) {
-      document.querySelectorAll(".tab-btn").forEach(b =>
-        b.classList.toggle("active", b.dataset.tab === tab));
-      document.querySelectorAll(".tab-content").forEach(c =>
-        c.classList.toggle("active", c.id === tab));
-    }
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        showTab(btn.dataset.tab);
-        history.replaceState(null, "", "#" + btn.dataset.tab);
-        window.scrollTo({ top: 0 });
-      });
-    });
-    if (location.hash === "#writeup") showTab("writeup");
-  </script>
 </body>
 </html>
